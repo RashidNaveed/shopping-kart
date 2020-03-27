@@ -30,6 +30,9 @@ class Add extends Component {
       .then(res => {
         console.log(res);
       })
+      .then(() => {
+        window.location.reload(true);
+      })
       .catch(err => {
         console.log(err);
       });
