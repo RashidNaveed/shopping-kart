@@ -31,12 +31,12 @@ export default class Admin extends Component {
       textDecorationColor: color
     });
 
-    const { stylesTab2 } = this.props;
     const { products } = this.state;
+    console.log("product", products);
     return (
       <div>
         <Table responsive striped bordered hover size="sm">
-          <thead style={stylesTab2}>
+          <thead>
             <tr>
               <th>#</th>
               <th>Title</th>
