@@ -52,20 +52,20 @@ export default class Admin extends Component {
             </tr>
           </thead>
           <tbody>
-            {products.map((x, index) => (
-              <tr key={x._id}>
-                <th scope="row">{index + 1}</th>
+            {products.map((x, id) => (
+              <tr key={id}>
+                <th scope="row">{id + 1}</th>
                 <td>{x.title}</td>
                 <td>{x._id}</td>
                 <td>{x.price}$</td>
                 <td>
-                  {x.color.map(x => (
-                    <span>
+                  {x.color.map((x, id) => (
+                    <span key={id}>
                       <span style={stylesColor(x)}>{x}</span> /{" "}
                     </span>
                   ))}
                 </td>
-                <td>{x.size.map(x => x + " / ")}</td>
+                <td>{x.size.map((x, id) => x + " / ")}</td>
                 <td>{x.tags}</td>
                 <td>{x.images.length}</td>
                 <td>{x.description.substring(0, 30) + "... "}</td>
