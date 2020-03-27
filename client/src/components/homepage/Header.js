@@ -19,8 +19,8 @@ class Header extends Component {
             </LinkContainer>
           </Nav>
           <Nav className="ml-auto">
-            <LinkContainer to="/products/add">
-              <Nav.Link href="">Add Product</Nav.Link>
+            <LinkContainer to="/admin">
+              <Nav.Link>Admin</Nav.Link>
             </LinkContainer>
             <Nav.Link>Cart</Nav.Link>
           </Nav>
