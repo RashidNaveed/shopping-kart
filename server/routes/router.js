@@ -1,140 +1,28 @@
 const express = require("express");
+
 const router = express.Router();
+
 const order = require("../models/Order.model");
-const product = require("../models/Product.model");
+
+const productController = require("../controllers/Product.controller");
 
 // adding products
-router.post("/products/add", (req, res) => {
-  const {
-    title,
-    size,
-    price,
-    images,
-    rating,
-    tags,
-    color,
-    description
-  } = req.body;
-  const newProduct = new product({
-    title,
-    size,
-    price,
-    images,
-    rating,
-    tags,
-    color,
-    description
-  });
-  newProduct
-    .save()
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message || "Something went wrong while creating movie-card"
-      });
-    });
-  console.log(req);
-});
+router.post("/products/add", productController.addProduct);
 
 // getting all products
-router.get("/products", (req, res) => {
-  product.find({}, (err, result) => {
-    err ? res.status(500).send(err) : res.json(result);
-  });
-});
+router.get("/products", productController.getAllProducts);
 
 // getting single product
-router.get("/products/:id", (req, res) => {
-  product
-    .findById(req.params.id)
-    .then(result => {
-      if (!result) {
-        return res.status(404).send({
-          message: "Product not found"
-        });
-      }
-    })
-    .catch(err => {
-      if (err.kind === "ObjectId") {
-        return res.status(404).send({
-          message: "Product not found by id" + req.params.id
-        });
-      }
-      return res.status(500).send({
-        message: "Product not found by id" + req.params.id
-      });
-    });
-});
+router.get("/products/:id", productController.getSingleProduct);
+
+// getting product by category
+router.get("/category/:tags", productController.getTagProduct);
 
 // updating product
-router.put("/products/edit/:id", (req, res) => {
-  const { id } = req.params;
-  const { title, price, color, size, tags, images, description } = req.body;
-  product
-    .findById(
-      id,
-      (err, model) => {
-        if (err) return handleError(err);
+router.put("/products/edit/:id", productController.updateProduct);
 
-        model.set({ title, price, color, size, tags, images, description });
-        model.save(err => {
-          if (err) {
-            console.log(err);
-          }
-        });
-      },
-      console.log("id in params", id),
-      console.log("Data in params", req.body)
-    )
-    .then(result => {
-      if (!result) {
-        return res.status(404).send({
-          message: "Product not found"
-        });
-      }
-      res.send(result);
-    })
-    .catch(err => {
-      if (err.kind === "ObjectId") {
-        return res.status(404).send({
-          message: "Product not found by id" + id
-        });
-      }
-      return res.status(500).send({
-        message: "Product not found by id" + id
-      });
-    });
-});
 //deleting product
-router.delete("/products/delete/:id", (req, res) => {
-  const { id } = req.params;
-  product
-    .findByIdAndRemove(id, (err, model) => {
-      if (err) return handleError(err);
-      res.send("item: " + id + " deleted");
-    })
-    .then(result => {
-      if (!result) {
-        return res.status(404).send({
-          message: "Product not found with id " + id
-        });
-      }
-      res.send({ message: "Product deleted successfully!" });
-    })
-    .catch(err => {
-      if (err.kind === "ObjectId" || err.name === "NotFound") {
-        return res.status(404).send({
-          message: "Product not found with id " + id
-        });
-      }
-      return res.status(500).send({
-        message: "Could not delete product with id " + req.params.id
-      });
-    });
-  console.log("recived id is", id);
-});
+router.delete("/products/delete/:id", productController.deleteProduct);
 //Posting new order
 router.post("/products/order", (req, res) => {
   const {

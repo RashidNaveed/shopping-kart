@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -35,4 +36,9 @@ mongoose
     console.log("can't connect to database", err);
     process.exit;
   });
+mongoose.set("useFindAndModify", false);
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/", router);
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(__dirname, "public", "pageNotFound.html"));
+});

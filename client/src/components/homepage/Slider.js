@@ -2,9 +2,13 @@ import React, { Component } from "react";
 import { Carousel } from "react-bootstrap";
 
 export default class Slider extends Component {
+  constructor(props) {
+    super(props);
+    this.wrapper = React.createRef();
+  }
   render() {
     return (
-      <div>
+      <div ref={this.wrapper}>
         <Carousel>
           <Carousel.Item>
             <img
