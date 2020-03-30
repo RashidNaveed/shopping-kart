@@ -6,7 +6,9 @@ import Women from "./components/catagories/Women";
 // import AddProduct from "./components/Admin/AddProduct";
 // import DeleteProduct from "./components/Admin/DeleteProduct";
 // import ItemTable from "./components/Admin/ItemTable";
-import AdminControl from "./components/Admin/AdminControl";
+import AdminControl from "./components/admin/AdminControl";
+import ProductList from "./components/productList/ProductList";
+import ProductDiscription from "./components/productList/ProductDiscription";
 
 class Routes extends Component {
   render() {
@@ -19,6 +21,11 @@ class Routes extends Component {
           {/* <Route exact path="/products/add" component={AddProduct} /> */}
           {/* <Route exact path="/products/edit" component={ItemTable} /> */}
           <Route exact path="/admin" component={AdminControl} />
+          <Route path={`/productlist/:tag`} component={ProductList} />
+          <Route
+            path={`/productdiscription/:id`}
+            component={ProductDiscription}
+          />
         </Switch>
       </Router>
     );

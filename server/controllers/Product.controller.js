@@ -44,14 +44,17 @@ exports.getAllProducts = (req, res) => {
 
 // getting single product
 exports.getSingleProduct = (req, res) => {
+  const { id } = req.params;
+  console.log("Id is", id);
   product
-    .findById(req.params.id)
+    .findById(id)
     .then(result => {
       if (!result) {
         return res.status(404).send({
           message: "Product not found"
         });
       }
+      res.send(result);
     })
     .catch(err => {
       if (err.kind === "ObjectId") {
@@ -71,12 +74,12 @@ exports.getTagProduct = (req, res) => {
   product.find({ tags: req.params.tags }, (err, result) => {
     // err ? res.status(500).send(err) : res.json(result);
     if (err) {
-      res.status(500).send(err);
+      res.status(200).send(err);
     } else {
       if (result.length === 0) {
-        res
-          .status(402)
-          .send("Product not found by category " + req.params.tags);
+        res.status(200).send({
+          message: "Product not found by category " + req.params.tags
+        });
       } else return res.json(result);
     }
   });

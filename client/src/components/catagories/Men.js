@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Row, Col, Card, CardImg } from "react-bootstrap";
 import Header from "../homepage/Header";
 
@@ -48,30 +48,35 @@ class Men extends Component {
           <Row>
             {this.state.men.map((item, id) => (
               <Col md="4" style={{ marginBottom: "20px" }} key={id}>
-                <Card>
-                  <div
-                    style={{ textAlign: "center" }}
-                    onClick={() => item.cardTitle}
-                  >
-                    <CardImg
-                      src={item.imgSrc}
-                      alt="Card image cap"
-                      style={{ boxShadow: "0px 0px 7px 0px rgba(0,0,0,0.75)" }}
-                    />
+                <h1>{item.cardTitle}</h1>
+                <Link to={`/productlist/${item.cardTitle}`}>
+                  <Card>
                     <div
-                      style={{
-                        position: "absolute",
-                        top: "40%",
-                        textAlign: "center",
-                        width: "100%",
-                        color: "white",
-                        fontSize: "200%"
-                      }}
+                      style={{ textAlign: "center" }}
+                      onClick={() => item.cardTitle}
                     >
-                      <b> {item.cardTitle} </b>
+                      <CardImg
+                        src={item.imgSrc}
+                        alt="Card image cap"
+                        style={{
+                          boxShadow: "0px 0px 7px 0px rgba(0,0,0,0.75)"
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "40%",
+                          textAlign: "center",
+                          width: "100%",
+                          color: "white",
+                          fontSize: "200%"
+                        }}
+                      >
+                        <b> {item.cardTitle} </b>
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </Link>
               </Col>
             ))}
           </Row>
