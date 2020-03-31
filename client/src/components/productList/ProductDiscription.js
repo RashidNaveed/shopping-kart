@@ -1,6 +1,14 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card } from "react-bootstrap";
+import {
+  Card,
+  Image,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Container
+} from "react-bootstrap";
 // import { Link } from "react-router-dom";
 import Header from "../homepage/Header";
 // import RatingProduct from "./RatingProduct";
@@ -16,7 +24,8 @@ class ProductDiscription extends Component {
       selectedSize: "",
       selectedColor: "",
       missSizeMsg: "",
-      missColorMsg: ""
+      missColorMsg: "",
+      modalEdit: false
     };
   }
   componentDidMount() {
@@ -28,6 +37,7 @@ class ProductDiscription extends Component {
       this.setState({ products: data.data });
     });
   }
+
   handleSizeSelection = selectedSize => {
     this.setState({ selectedSize });
     // console.log("selected size in parent", selectedSize);
@@ -38,15 +48,43 @@ class ProductDiscription extends Component {
     // console.log("selected color in parent", selectedColor);
   };
 
-  validateSizeSelection = remark =>
+  validateSizeSelection = remark => {
     remark === "valid"
       ? this.setState({ missSizeMsg: "" })
       : this.setState({ missSizeMsg: remark });
+  };
 
-  validateColorSelection = remark =>
+  validateColorSelection = remark => {
     remark === "valid"
       ? this.setState({ missColorMsg: "" })
       : this.setState({ missColorMsg: remark });
+  };
+  toggle = () => {
+    if (
+      this.state.selectedColor.length > 0 &&
+      this.state.selectedSize.length > 0
+    ) {
+      this.setState({ modalEdit: !this.state.modalEdit });
+    }
+  };
+  localStorage = () => {
+    if (
+      this.state.selectedColor.length > 0 &&
+      this.state.selectedSize.length > 0
+    ) {
+      const cartData = {
+        title: this.state.products.title,
+        price: this.state.products.price,
+        image: this.state.products.images,
+        size: this.state.selectedSize,
+        color: this.state.selectedColor
+      };
+      let cartArray = [];
+      cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
+      cartArray.push(cartData);
+      localStorage.setItem("cartItem", JSON.stringify(cartArray));
+    }
+  };
   componentWillUnmount() {
     this._isMounted = false;
   }
@@ -97,14 +135,40 @@ class ProductDiscription extends Component {
                 validateSizeSelection={this.validateSizeSelection}
                 missSizeMsg={this.state.missSizeMsg}
                 missColorMsg={this.state.missColorMsg}
-                title={this.state.products.title}
-                price={this.state.products.price}
-                image={this.state.products.images}
+                toggle={this.toggle}
+                localStorage={this.localStorage}
               />
             </Card.Footer>
           </Card>
         </div>
-        <div></div>
+        <Modal show={this.state.modalEdit} onHide={this.toggle}>
+          <Modal.Header closeButton>
+            <Modal.Title>you have item in cart</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Container>
+              <Row>
+                <Col xs={6} md={5}>
+                  <Image src={this.state.products.images} fluid />
+                </Col>
+                <Col xs={6} md={4}>
+                  <h3> {this.state.products.title} </h3>
+                  <p>Rs: {this.state.products.price} </p>
+                  <p>color: {this.state.selectedColor}</p>
+                  <p>size: {this.state.selectedSize}</p>
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.toggle}>
+              EditCart
+            </Button>
+            <Button variant="primary" onClick={this.toggle}>
+              CheckOut
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
