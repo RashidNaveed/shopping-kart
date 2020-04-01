@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Row, Col, Card, CardImg } from "react-bootstrap";
-import Header from "../homepage/Header";
+import Layout from "../Layout";
 
 class Women extends Component {
   constructor(props) {
@@ -37,51 +37,52 @@ class Women extends Component {
   }
   render() {
     return (
-      <div>
-        <Header />
-        <Col md="12">
-          <h1
-            style={{ fontSize: "40px", textAlign: "center", padding: "20px" }}
-          >
-            Women selection
-          </h1>
-          <Row>
-            {this.state.women.map((item, id) => (
-              <Col md="4" style={{ marginBottom: "20px" }} key={id}>
-                <h1>{item.cardTitle}</h1>
-                <Link to={`/productlist/${item.cardTitle}`}>
-                  <Card>
-                    <div
-                      style={{ textAlign: "center" }}
-                      onClick={() => item.cardTitle}
-                    >
-                      <CardImg
-                        src={item.imgSrc}
-                        alt="Card image cap"
-                        style={{
-                          boxShadow: "0px 0px 7px 0px rgba(0,0,0,0.75)"
-                        }}
-                      />
+      <Layout>
+        <div>
+          <Col md="12">
+            <h1
+              style={{ fontSize: "40px", textAlign: "center", padding: "20px" }}
+            >
+              Women selection
+            </h1>
+            <Row>
+              {this.state.women.map((item, id) => (
+                <Col md="4" style={{ marginBottom: "20px" }} key={id}>
+                  <h1>{item.cardTitle}</h1>
+                  <Link to={`/productlist/${item.cardTitle}`}>
+                    <Card>
                       <div
-                        style={{
-                          position: "absolute",
-                          top: "40%",
-                          textAlign: "center",
-                          width: "100%",
-                          color: "white",
-                          fontSize: "200%"
-                        }}
+                        style={{ textAlign: "center" }}
+                        onClick={() => item.cardTitle}
                       >
-                        <b> {item.cardTitle} </b>
+                        <CardImg
+                          src={item.imgSrc}
+                          alt="Card image cap"
+                          style={{
+                            boxShadow: "0px 0px 7px 0px rgba(0,0,0,0.75)"
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "40%",
+                            textAlign: "center",
+                            width: "100%",
+                            color: "white",
+                            fontSize: "200%"
+                          }}
+                        >
+                          <b> {item.cardTitle} </b>
+                        </div>
                       </div>
-                    </div>
-                  </Card>
-                </Link>
-              </Col>
-            ))}
-          </Row>
-        </Col>
-      </div>
+                    </Card>
+                  </Link>
+                </Col>
+              ))}
+            </Row>
+          </Col>
+        </div>
+      </Layout>
     );
   }
 }

@@ -9,12 +9,13 @@ import {
   Modal,
   Container
 } from "react-bootstrap";
-// import { Link } from "react-router-dom";
 import Header from "../homepage/Header";
 // import RatingProduct from "./RatingProduct";
 import SizeSelection from "./SizeSelection";
 import ColorSelection from "./ColorSelection";
 import AddToCart from "../cart/AddToCart";
+import Layout from "../Layout";
+import { Link } from "react-router-dom";
 class ProductDiscription extends Component {
   _isMounted = false;
   constructor(props) {
@@ -77,99 +78,126 @@ class ProductDiscription extends Component {
         price: this.state.products.price,
         image: this.state.products.images,
         size: this.state.selectedSize,
-        color: this.state.selectedColor
+        color: this.state.selectedColor,
+        quantity: 1
       };
       let cartArray = [];
       cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
-      cartArray.push(cartData);
-      localStorage.setItem("cartItem", JSON.stringify(cartArray));
+      if (cartArray.length > 0) {
+        for (let i = 0; i < cartArray.length; i++) {
+          if (
+            cartArray[i].title === cartData.title &&
+            cartArray[i].color === cartData.color &&
+            cartArray[i].size === cartData.size
+          ) {
+            console.log("array before adding local storage", cartArray[i]);
+            cartArray[i].quantity += cartData.quantity;
+            cartArray[i].price += cartData.price;
+            localStorage.setItem("cartItem", JSON.stringify(cartArray));
+          } else {
+            cartArray.push(cartData);
+            localStorage.setItem("cartItem", JSON.stringify(cartArray));
+          }
+        }
+      } else {
+        cartArray.push(cartData);
+        localStorage.setItem("cartItem", JSON.stringify(cartArray));
+      }
     }
   };
   componentWillUnmount() {
     this._isMounted = false;
   }
   render() {
+    let cartArray = [];
+    cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
     return (
-      <div>
-        <Header />
-        {/* <RatingProduct /> */}
-        <div className="container">
-          <Card style={{ width: "20rem" }}>
-            <Card.Img variant="top" src={this.state.products.images} />
-            <Card.Body>
-              <Card.Title>{this.state.products.title}</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">
-                {this.state.products.price}
-              </Card.Subtitle>
-              <Card.Text>{this.state.products.description}</Card.Text>
-            </Card.Body>
-            <Card.Footer>
-              <SizeSelection
-                size={this.state.products.size}
-                handleSizeSelection={this.handleSizeSelection}
-                selectedSize={this.state.selectedSize}
-                validateSizeSelection={this.validateSizeSelection}
-              />
-              {this.state.missSizeMsg.length > 0 ? (
-                <b style={{ color: "red" }}>*{this.state.missSizeMsg}</b>
-              ) : (
-                ""
-              )}
-              <br />
-              <ColorSelection
-                color={this.state.products.color}
-                selectedColor={this.state.selectedColor}
-                handleColorSelection={this.handleColorSelection}
-                validateColorSelection={this.validateColorSelection}
-              />
-              {this.state.missColorMsg.length > 0 ? (
-                <b style={{ color: "red" }}>*{this.state.missColorMsg}</b>
-              ) : (
-                ""
-              )}
-              <br />
-              <AddToCart
-                selectedColor={this.state.selectedColor}
-                selectedSize={this.state.selectedSize}
-                validateColorSelection={this.validateColorSelection}
-                validateSizeSelection={this.validateSizeSelection}
-                missSizeMsg={this.state.missSizeMsg}
-                missColorMsg={this.state.missColorMsg}
-                toggle={this.toggle}
-                localStorage={this.localStorage}
-              />
-            </Card.Footer>
-          </Card>
+      <Layout>
+        <div className="mt-3">
+          {/* <RatingProduct /> */}
+          <div className="container">
+            <Card style={{ width: "20rem" }}>
+              <Card.Img variant="top" src={this.state.products.images} />
+              <Card.Body>
+                <Card.Title>{this.state.products.title}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">
+                  {this.state.products.price}
+                </Card.Subtitle>
+                <Card.Text>{this.state.products.description}</Card.Text>
+              </Card.Body>
+              <Card.Footer>
+                <SizeSelection
+                  size={this.state.products.size}
+                  handleSizeSelection={this.handleSizeSelection}
+                  selectedSize={this.state.selectedSize}
+                  validateSizeSelection={this.validateSizeSelection}
+                />
+                {this.state.missSizeMsg.length > 0 ? (
+                  <b style={{ color: "red" }}>*{this.state.missSizeMsg}</b>
+                ) : (
+                  ""
+                )}
+                <br />
+                <ColorSelection
+                  color={this.state.products.color}
+                  selectedColor={this.state.selectedColor}
+                  handleColorSelection={this.handleColorSelection}
+                  validateColorSelection={this.validateColorSelection}
+                />
+                {this.state.missColorMsg.length > 0 ? (
+                  <b style={{ color: "red" }}>*{this.state.missColorMsg}</b>
+                ) : (
+                  ""
+                )}
+                <br />
+                <AddToCart
+                  selectedColor={this.state.selectedColor}
+                  selectedSize={this.state.selectedSize}
+                  validateColorSelection={this.validateColorSelection}
+                  validateSizeSelection={this.validateSizeSelection}
+                  missSizeMsg={this.state.missSizeMsg}
+                  missColorMsg={this.state.missColorMsg}
+                  toggle={this.toggle}
+                  localStorage={this.localStorage}
+                />
+              </Card.Footer>
+            </Card>
+          </div>
+          <Modal show={this.state.modalEdit} onHide={this.toggle}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                you have {cartArray.length}{" "}
+                {cartArray.length > 0 ? "items" : "item"} in cart
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Container>
+                <Row>
+                  <Col xs={6} md={5}>
+                    <Image src={this.state.products.images} fluid />
+                  </Col>
+                  <Col xs={6} md={4}>
+                    <h3> {this.state.products.title} </h3>
+                    <p>Rs: {this.state.products.price} </p>
+                    <p>color: {this.state.selectedColor}</p>
+                    <p>size: {this.state.selectedSize}</p>
+                  </Col>
+                </Row>
+              </Container>
+            </Modal.Body>
+            <Modal.Footer>
+              <Link to="/cart">
+                <Button variant="secondary" onClick={this.toggle}>
+                  EditCart
+                </Button>
+              </Link>
+              <Button variant="primary" onClick={this.toggle}>
+                CheckOut
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
-        <Modal show={this.state.modalEdit} onHide={this.toggle}>
-          <Modal.Header closeButton>
-            <Modal.Title>you have item in cart</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Container>
-              <Row>
-                <Col xs={6} md={5}>
-                  <Image src={this.state.products.images} fluid />
-                </Col>
-                <Col xs={6} md={4}>
-                  <h3> {this.state.products.title} </h3>
-                  <p>Rs: {this.state.products.price} </p>
-                  <p>color: {this.state.selectedColor}</p>
-                  <p>size: {this.state.selectedSize}</p>
-                </Col>
-              </Row>
-            </Container>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.toggle}>
-              EditCart
-            </Button>
-            <Button variant="primary" onClick={this.toggle}>
-              CheckOut
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
+      </Layout>
     );
   }
 }

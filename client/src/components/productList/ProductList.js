@@ -4,6 +4,7 @@ import { Card, Badge, CardColumns } from "react-bootstrap";
 import Header from "../homepage/Header";
 import { Link } from "react-router-dom";
 import RatingProduct from "./RatingProduct";
+import Layout from "../Layout";
 
 class ProductList extends Component {
   constructor(props) {
@@ -34,37 +35,42 @@ class ProductList extends Component {
 
   render() {
     return (
-      <div>
-        <Header />
-        <div className="mt-5">
-          {" "}
-          {this.state.error && <h1>{this.state.error}</h1>}
-        </div>
-        {this.state.products && (
+      <Layout>
+        <div>
           <div className="mt-5">
-            <CardColumns>
-              {this.state.products.map((product, id) => (
-                <Card key={id}>
-                  <Link to={`/productdiscription/${product._id}`}>
-                    <Card.Img variant="top" src={product.images} alt="image" />
-                    <Card.Body>
-                      <Card.Title>{product.title}</Card.Title>
-                      <Card.Subtitle>Rs:{product.price}</Card.Subtitle>
-                      <Card.Text>{product.description}</Card.Text>
-                    </Card.Body>
-                    <Card.Body>
-                      <Badge variant="primary">{product.rating}</Badge>
-                    </Card.Body>
-                    <Card.Footer>
-                      <RatingProduct rating={product.rating} />
-                    </Card.Footer>
-                  </Link>
-                </Card>
-              ))}
-            </CardColumns>
+            {" "}
+            {this.state.error && <h1>{this.state.error}</h1>}
           </div>
-        )}
-      </div>
+          {this.state.products && (
+            <div className="mt-5">
+              <CardColumns>
+                {this.state.products.map((product, id) => (
+                  <Card key={id}>
+                    <Link to={`/productdiscription/${product._id}`}>
+                      <Card.Img
+                        variant="top"
+                        src={product.images}
+                        alt="image"
+                      />
+                      <Card.Body>
+                        <Card.Title>{product.title}</Card.Title>
+                        <Card.Subtitle>Rs:{product.price}</Card.Subtitle>
+                        <Card.Text>{product.description}</Card.Text>
+                      </Card.Body>
+                      <Card.Body>
+                        <Badge variant="primary">{product.rating}</Badge>
+                      </Card.Body>
+                      <Card.Footer>
+                        <RatingProduct rating={product.rating} />
+                      </Card.Footer>
+                    </Link>
+                  </Card>
+                ))}
+              </CardColumns>
+            </div>
+          )}
+        </div>
+      </Layout>
     );
   }
 }

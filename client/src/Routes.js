@@ -9,6 +9,8 @@ import Women from "./components/catagories/Women";
 import AdminControl from "./components/admin/AdminControl";
 import ProductList from "./components/productList/ProductList";
 import ProductDiscription from "./components/productList/ProductDiscription";
+import ShowCart from "./components/cart/ShowCart";
+import Header from "./components/homepage/Header";
 
 class Routes extends Component {
   render() {
@@ -26,6 +28,7 @@ class Routes extends Component {
             path={`/productdiscription/:id`}
             component={ProductDiscription}
           />
+          <Route path="/cart" component={ShowCart} />
         </Switch>
       </Router>
     );
