@@ -13,51 +13,21 @@ export default class ShowCart extends Component {
   }
   componentDidMount() {
     let cartArray = [];
-    let price = 0;
     cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
-    console.log("cartArray is", cartArray);
     this.setState({ cartItems: cartArray }, () => {
-      console.log("cartItem", this.state.cartItems);
+      let price = this.state.cartItems[0].price;
       if (this.state.cartItems.length !== 0) {
-        for (let i = 0; i < this.state.cartItems.length; i++) {
-          price = 0 + this.state.cartItems[i].price;
+        for (let i = 1; i < this.state.cartItems.length; i++) {
+          price = price + this.state.cartItems[i].price;
         }
         this.setState({ totalPrice: price });
-      }
+      } else this.setState({ totalPrice: price });
     });
   }
-  //   componentDidUpdate() {
 
-  //     let cartArray = [];
-  //     let price = 0;
-  //     cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
-  //     console.log("cartArray is", cartArray);
-  //     this.setState({ cartItems: cartArray }, () => {
-  //       console.log("cartItem", this.state.cartItems);
-  //       //   console.log("price", this.state.cartItems.length);
-  //       if (this.state.cartItems.length !== 0) {
-  //         // console.log("length", this.state.cartItems.length);
-  //         for (let i = 0; i < this.state.cartItems.length; i++) {
-  //           price = price + this.state.cartItems[i].price;
-  //         }
-  //         // console.log("price", price);
-  //         this.setState({ totalPrice: price });
-  //         // console.log("total price", this.state.totalPrice);
-  //       }
-  //     });
-  //   }
-  addProduct = (title, size, color, price, image) => {
-    console.log("passed data", title, size, color, price, image);
-
-    const cartData = {
-      title: title,
-      price: price,
-      image: image,
-      size: size,
-      color: color,
-      quantity: 1
-    };
+  addProduct = (title, size, color, price, image, quantity) => {
     let cartArray = [];
+    let addPrice = price / quantity;
     cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
     if (cartArray.length > 0) {
       for (let i = 0; i < cartArray.length; i++) {
@@ -66,54 +36,58 @@ export default class ShowCart extends Component {
           cartArray[i].color === color &&
           cartArray[i].size === size
         ) {
-          //   console.log("array before adding local storage", cartArray[i]);
           cartArray[i].quantity += 1;
-          cartArray[i].price += cartData.price / 2;
-          localStorage.setItem("cartItem", JSON.stringify(cartArray));
-        } else {
-          cartArray.push(cartData);
+          cartArray[i].price = cartArray[i].price + addPrice;
           localStorage.setItem("cartItem", JSON.stringify(cartArray));
         }
       }
-    } else {
-      cartArray.push(cartData);
-      localStorage.setItem("cartItem", JSON.stringify(cartArray));
     }
-    // let updatePrice = cartData.price + cartData.price
-    // this.setState({totalPrice: updatePrice})
+
     let updateCartArray = [];
-    let updatePrice = 0;
+    // let updatePrice = 0;
     updateCartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
     this.setState({ cartItems: updateCartArray }, () => {
-      if (updateCartArray.length !== 0) {
-        for (let i = 0; i < updateCartArray.length; i++) {
-          if (updateCartArray[i].quantity > 1) {
-            console.log("quantity", updateCartArray[i].quantity);
-            console.log("price", updateCartArray[i].price);
-
-            updatePrice = 0 + updateCartArray[i].price / 2;
-            console.log("price to show", updatePrice);
-            this.setState({ totalPrice: updatePrice });
-          }
+      let price = this.state.cartItems[0].price;
+      if (this.state.cartItems.length !== 0) {
+        for (let i = 1; i < this.state.cartItems.length; i++) {
+          price = price + this.state.cartItems[i].price;
         }
-      }
+        this.setState({ totalPrice: price });
+      } else this.setState({ totalPrice: price });
     });
   };
-  removeProduct = (title, size, color, price, image) => {
-    console.log("passed data", title, size, color, price, image);
-
-    const cartData = {
-      title: title,
-      price: price,
-      image: image,
-      size: size,
-      color: color,
-      quantity: 1
-    };
+  removeProduct = (title, size, color, price, image, quantity) => {
     let cartArray = [];
+    let addPrice = price / quantity;
     cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
-    cartArray.push(cartData);
-    localStorage.setItem("cartItem", JSON.stringify(cartArray));
+    if (cartArray.length > 0) {
+      for (let i = 0; i < cartArray.length; i++) {
+        if (
+          cartArray[i].quantity > 1 &&
+          cartArray[i].title === title &&
+          cartArray[i].color === color &&
+          cartArray[i].size === size
+        ) {
+          cartArray[i].quantity -= 1;
+          cartArray[i].price = cartArray[i].price - addPrice;
+          localStorage.setItem("cartItem", JSON.stringify(cartArray));
+        }
+      }
+    }
+
+    let updateCartArray = [];
+    updateCartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
+    this.setState({ cartItems: updateCartArray }, () => {
+      let price = this.state.cartItems[0].price;
+      if (this.state.cartItems.length !== 0) {
+        for (let i = 1; i < this.state.cartItems.length; i++) {
+          console.log("in for loop", this.state.cartItems);
+          price = this.state.cartItems[i].price - price;
+          console.log("price for total is ", price);
+        }
+        this.setState({ totalPrice: price });
+      } else this.setState({ totalPrice: price });
+    });
   };
   render() {
     return (
@@ -167,7 +141,8 @@ export default class ShowCart extends Component {
                                 item.size,
                                 item.color,
                                 item.price,
-                                item.image
+                                item.image,
+                                item.quantity
                               )
                             }
                           >
@@ -190,7 +165,8 @@ export default class ShowCart extends Component {
                                 item.size,
                                 item.color,
                                 item.price,
-                                item.image
+                                item.image,
+                                item.quantity
                               )
                             }
                           >

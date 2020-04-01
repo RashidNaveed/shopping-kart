@@ -9,7 +9,6 @@ import {
   Modal,
   Container
 } from "react-bootstrap";
-import Header from "../homepage/Header";
 // import RatingProduct from "./RatingProduct";
 import SizeSelection from "./SizeSelection";
 import ColorSelection from "./ColorSelection";
@@ -83,25 +82,26 @@ class ProductDiscription extends Component {
       };
       let cartArray = [];
       cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
-      if (cartArray.length > 0) {
-        for (let i = 0; i < cartArray.length; i++) {
-          if (
-            cartArray[i].title === cartData.title &&
-            cartArray[i].color === cartData.color &&
-            cartArray[i].size === cartData.size
-          ) {
-            console.log("array before adding local storage", cartArray[i]);
-            cartArray[i].quantity += cartData.quantity;
-            cartArray[i].price += cartData.price;
-            localStorage.setItem("cartItem", JSON.stringify(cartArray));
-          } else {
-            cartArray.push(cartData);
-            localStorage.setItem("cartItem", JSON.stringify(cartArray));
-          }
+      // console.log("cartArray", cartArray);
+      for (let i = 0; cartArray.length >= 0 && i <= cartArray.length; i++) {
+        if (
+          cartArray.length > 0 &&
+          cartArray[i].title === cartData.title &&
+          cartArray[i].color === cartData.color &&
+          cartArray[i].size === cartData.size
+        ) {
+          console.log("array before adding local storage", cartArray[i]);
+          cartArray[i].quantity += cartData.quantity;
+          cartArray[i].price += cartData.price;
+          localStorage.setItem("cartItem", JSON.stringify(cartArray));
+          break;
+        } else {
+          console.log("cartData before pushing ", cartData);
+          cartArray.push(cartData);
+          console.log("cartArray after pushing ", cartArray);
+          localStorage.setItem("cartItem", JSON.stringify(cartArray));
+          break;
         }
-      } else {
-        cartArray.push(cartData);
-        localStorage.setItem("cartItem", JSON.stringify(cartArray));
       }
     }
   };
@@ -187,13 +187,8 @@ class ProductDiscription extends Component {
             </Modal.Body>
             <Modal.Footer>
               <Link to="/cart">
-                <Button variant="secondary" onClick={this.toggle}>
-                  EditCart
-                </Button>
+                <Button variant="secondary">View Cart</Button>
               </Link>
-              <Button variant="primary" onClick={this.toggle}>
-                CheckOut
-              </Button>
             </Modal.Footer>
           </Modal>
         </div>
