@@ -8,6 +8,7 @@ import AdminControl from "./components/admin/AdminControl";
 import ProductList from "./components/productList/ProductList";
 import ProductDiscription from "./components/productList/ProductDiscription";
 import ShowCart from "./components/cart/ShowCart";
+import Checkout from "./components/checkout/Checkout";
 
 class Routes extends Component {
   render() {
@@ -25,6 +26,7 @@ class Routes extends Component {
             component={ProductDiscription}
           />
           <Route path="/cart" component={ShowCart} />
+          <Route path="/checkout" component={Checkout} />
         </Switch>
       </Router>
     );

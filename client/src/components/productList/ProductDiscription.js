@@ -31,21 +31,18 @@ class ProductDiscription extends Component {
   componentDidMount() {
     this._isMounted = true;
     const id = this.props.match.params.id;
-    // console.log("recived id is", id);
+
     axios.get(`http://localhost:4000/products/${id}`).then(data => {
-      // console.log("recived data is", data.data);
       this.setState({ products: data.data });
     });
   }
 
   handleSizeSelection = selectedSize => {
     this.setState({ selectedSize });
-    // console.log("selected size in parent", selectedSize);
   };
 
   handleColorSelection = selectedColor => {
     this.setState({ selectedColor });
-    // console.log("selected color in parent", selectedColor);
   };
 
   validateSizeSelection = remark => {
@@ -72,6 +69,8 @@ class ProductDiscription extends Component {
       this.state.selectedColor.length > 0 &&
       this.state.selectedSize.length > 0
     ) {
+      let cartArray = [];
+      cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
       const cartData = {
         title: this.state.products.title,
         price: this.state.products.price,
@@ -80,29 +79,63 @@ class ProductDiscription extends Component {
         color: this.state.selectedColor,
         quantity: 1
       };
-      let cartArray = [];
-      cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
-      // console.log("cartArray", cartArray);
-      for (let i = 0; cartArray.length >= 0 && i <= cartArray.length; i++) {
-        if (
-          cartArray.length > 0 &&
-          cartArray[i].title === cartData.title &&
-          cartArray[i].color === cartData.color &&
-          cartArray[i].size === cartData.size
-        ) {
-          console.log("array before adding local storage", cartArray[i]);
-          cartArray[i].quantity += cartData.quantity;
-          cartArray[i].price += cartData.price;
-          localStorage.setItem("cartItem", JSON.stringify(cartArray));
-          break;
-        } else {
-          console.log("cartData before pushing ", cartData);
-          cartArray.push(cartData);
-          console.log("cartArray after pushing ", cartArray);
-          localStorage.setItem("cartItem", JSON.stringify(cartArray));
-          break;
+      if (
+        cartArray.some(
+          data =>
+            data.title === cartData.title &&
+            data.size === cartData.size &&
+            data.color === cartData.color
+        )
+      ) {
+        for (let i = 0; i < cartArray.length; i++) {
+          cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
+
+          if (
+            cartArray[i].title === cartData.title &&
+            cartArray[i].color === cartData.color &&
+            cartArray[i].size === cartData.size
+          ) {
+            cartArray[i].quantity += cartData.quantity;
+            cartArray[i].price += cartData.price;
+            localStorage.setItem("cartItem", JSON.stringify(cartArray));
+          }
         }
+      } else {
+        cartArray.push(cartData);
+        localStorage.setItem("cartItem", JSON.stringify(cartArray));
       }
+
+      // for (let i = 0; i < cartArray.length && cartArray.length > 0; i++) {
+      //   cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
+      //   console.log("cartArray length", cartArray.length);
+      //   console.log("value of i", i);
+
+      //   if (
+      //     cartArray[i].title === cartData.title &&
+      //     cartArray[i].color === cartData.color &&
+      //     cartArray[i].size === cartData.size
+      //   ) {
+      //     console.log(
+      //       "array before adding local storage in loop if",
+      //       cartArray[i]
+      //     );
+      //     cartArray[i].quantity += cartData.quantity;
+      //     cartArray[i].price += cartData.price;
+      //     localStorage.setItem("cartItem", JSON.stringify(cartArray));
+      //   }
+      //   if (cartArray[i].quantity <= 1) {
+      //     console.log("cartData before pushing in loop else", cartData);
+      //     cartArray.push(cartData);
+      //     console.log("cartArray after pushing in loop else", cartArray);
+      //     localStorage.setItem("cartItem", JSON.stringify(cartArray));
+      //   }
+      // }
+      // if (cartArray.length === 0) {
+      //   console.log("cartData before pushing in else ", cartData);
+      //   cartArray.push(cartData);
+      //   console.log("cartArray after pushing in else", cartArray);
+      //   localStorage.setItem("cartItem", JSON.stringify(cartArray));
+      // }
     }
   };
   componentWillUnmount() {

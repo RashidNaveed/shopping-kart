@@ -13,7 +13,7 @@ export default class Layout extends Component {
         <main>
           <div>{children}</div>
         </main>
-        <footer>
+        <footer className="footer">
           <Footer />
         </footer>
       </div>

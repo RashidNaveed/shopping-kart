@@ -10,7 +10,7 @@ export default function Footer() {
     textAlign: "center"
   };
   return (
-    <div style={styles}>
+    <div style={styles} id="fixed-bottom">
       <Container>
         <Row>
           <Col md="12" style={{ textAlign: "center", paddingBottom: "30px" }}>

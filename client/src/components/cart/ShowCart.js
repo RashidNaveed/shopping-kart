@@ -8,22 +8,52 @@ export default class ShowCart extends Component {
     super(props);
     this.state = {
       cartItems: [],
-      totalPrice: ""
+      totalPrice: "",
+      emptyMessage: ""
     };
   }
   componentDidMount() {
     let cartArray = [];
     cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
     this.setState({ cartItems: cartArray }, () => {
-      let price = this.state.cartItems[0].price;
+      if (this.state.cartItems.length < 1) {
+        this.setState({ emptyMessage: "Empty Cart", totalPrice: 0 });
+      }
       if (this.state.cartItems.length !== 0) {
-        for (let i = 1; i < this.state.cartItems.length; i++) {
-          price = price + this.state.cartItems[i].price;
-        }
-        this.setState({ totalPrice: price });
-      } else this.setState({ totalPrice: price });
+        let price = this.state.cartItems[0].price;
+        if (this.state.cartItems.length !== 0) {
+          for (let i = 1; i < this.state.cartItems.length; i++) {
+            price = price + this.state.cartItems[i].price;
+          }
+          this.setState({ totalPrice: price });
+        } else this.setState({ totalPrice: price });
+      }
     });
   }
+
+  totalPrice = () => {
+    let updateCartArray = [];
+    updateCartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
+    if (updateCartArray.length < 1) {
+      this.setState({
+        emptyMessage: "Cart is empty",
+        totalPrice: 0,
+        cartItems: []
+      });
+    } else {
+      this.setState({ cartItems: updateCartArray }, () => {
+        if (updateCartArray.length > 0) {
+          let price = this.state.cartItems[0].price;
+          if (this.state.cartItems.length !== 0) {
+            for (let i = 1; i < this.state.cartItems.length; i++) {
+              price = price + this.state.cartItems[i].price;
+            }
+            this.setState({ totalPrice: price });
+          } else this.setState({ totalPrice: price });
+        }
+      });
+    }
+  };
 
   addProduct = (title, size, color, price, image, quantity) => {
     let cartArray = [];
@@ -42,19 +72,7 @@ export default class ShowCart extends Component {
         }
       }
     }
-
-    let updateCartArray = [];
-    // let updatePrice = 0;
-    updateCartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
-    this.setState({ cartItems: updateCartArray }, () => {
-      let price = this.state.cartItems[0].price;
-      if (this.state.cartItems.length !== 0) {
-        for (let i = 1; i < this.state.cartItems.length; i++) {
-          price = price + this.state.cartItems[i].price;
-        }
-        this.setState({ totalPrice: price });
-      } else this.setState({ totalPrice: price });
-    });
+    this.totalPrice();
   };
   removeProduct = (title, size, color, price, image, quantity) => {
     let cartArray = [];
@@ -75,27 +93,34 @@ export default class ShowCart extends Component {
       }
     }
 
-    let updateCartArray = [];
-    updateCartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
-    this.setState({ cartItems: updateCartArray }, () => {
-      let price = this.state.cartItems[0].price;
-      if (this.state.cartItems.length !== 0) {
-        for (let i = 1; i < this.state.cartItems.length; i++) {
-          console.log("in for loop", this.state.cartItems);
-          price = this.state.cartItems[i].price - price;
-          console.log("price for total is ", price);
-        }
-        this.setState({ totalPrice: price });
-      } else this.setState({ totalPrice: price });
-    });
+    this.totalPrice();
+  };
+  deleteProduct = id => {
+    let cartArray = [];
+    cartArray = JSON.parse(localStorage.getItem("cartItem")) || [];
+    console.log("delete array", cartArray);
+    cartArray.splice(id, 1);
+    console.log("after delete array", cartArray);
+    localStorage.setItem("cartItem", JSON.stringify(cartArray));
+    this.totalPrice();
   };
   render() {
+    let shipping;
+    this.state.totalPrice === 0 ? (shipping = 0) : (shipping = 100);
+
     return (
       <Layout>
         <div className="mt-3">
           <div style={{ paddingTop: "70px", paddingBottom: "150px" }}>
             <Container>
-              <h1 style={{ textAlign: "center", padding: "30px" }}>Cart</h1>
+              {this.state.cartItems.length < 1 ? (
+                <h1 style={{ textAlign: "center", padding: "30px" }}>
+                  {" "}
+                  {this.state.emptyMessage}{" "}
+                </h1>
+              ) : (
+                <h1 style={{ textAlign: "center", padding: "30px" }}>Cart</h1>
+              )}
               <Table>
                 <thead>
                   <tr>
@@ -179,14 +204,16 @@ export default class ShowCart extends Component {
                           <button
                             style={{
                               color: "white",
-                              backgroundColor: "#072a48",
+                              backgroundColor: "#dc3545",
                               border: "solid",
-                              borderColor: "#072a48",
+                              borderColor: "#dc3545",
                               width: "30px",
                               cursor: "pointer",
                               borderWidth: "0.1ex"
                             }}
-                            onClick=""
+                            onClick={() => {
+                              this.deleteProduct(id);
+                            }}
                           >
                             x
                           </button>
@@ -211,7 +238,7 @@ export default class ShowCart extends Component {
                       <b>Shipping</b>
                     </td>
                     <td>
-                      <b>Rs: 100</b>
+                      <b>Rs: {shipping}</b>
                     </td>
                   </tr>
                   <tr>
@@ -221,14 +248,22 @@ export default class ShowCart extends Component {
                       <b>Rs: Total</b>
                     </td>
                     <td>
-                      <b>Rs: {this.state.totalPrice + 100} </b>
+                      <b>Rs: {this.state.totalPrice + shipping} </b>
                     </td>
                   </tr>
                 </tbody>
               </Table>
               <div style={{ textAlign: "right" }}>
                 <Link to="/checkout">
-                  <Button>Check out</Button>
+                  <Button
+                    style={{
+                      color: "white",
+                      backgroundColor: "#6c757d",
+                      borderColor: "#6c757d"
+                    }}
+                  >
+                    Check out
+                  </Button>
                 </Link>
               </div>
             </Container>
