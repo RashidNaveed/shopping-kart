@@ -40,6 +40,7 @@ export default class Signup extends Component {
         <Form
           className="container"
           style={{ paddingTop: "80px", paddingBottom: "100px" }}
+          onSubmit={this.submitHandler}
         >
           <Row form>
             <Col>
@@ -95,9 +96,7 @@ export default class Signup extends Component {
               </FormGroup>
             </Col>
           </Row>
-          <Button type="submit" onSubmit={this.submitHandler}>
-            Sign up
-          </Button>
+          <Button type="submit">Sign up</Button>
         </Form>
       </Layout>
     );
