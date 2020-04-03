@@ -77,7 +77,7 @@ exports.getTagProduct = (req, res) => {
       res.status(200).send(err);
     } else {
       if (result.length === 0) {
-        res.status(200).send({
+        res.status(200).json({
           message: "Product not found by category " + req.params.tags
         });
       } else return res.json(result);

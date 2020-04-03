@@ -2,9 +2,15 @@ const express = require("express");
 
 const router = express.Router();
 
+const { body } = require("express-validator");
+
 const productController = require("../controllers/Product.controller");
 
 const orderController = require("../controllers/Order.controller");
+
+const authController = require("../controllers/Auth.controller");
+
+const User = require("../models/User.model");
 
 // adding products
 router.post("/products/add", productController.addProduct);
@@ -27,6 +33,35 @@ router.delete("/products/delete/:id", productController.deleteProduct);
 router.post("/products/order", orderController.addOrder);
 //get order data
 router.get("/order");
+
+//singup user
+router.put(
+  "/signup",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Please enter a valid email")
+      .custom((value, { req }) => {
+        return User.findOne({ email: value }).then(user => {
+          if (user) {
+            return Promise.reject("E-Mail address already exisits");
+          }
+        });
+      })
+      .normalizeEmail(),
+    body("password")
+      .trim()
+      .isLength({ min: 6 }),
+    body("name")
+      .trim()
+      .not()
+      .isEmpty()
+  ],
+  authController.signup
+);
+
+//Login user
+router.post("/login", authController.login);
 
 router.get("/", (req, res) => {
   res.json({ message: "Welcome to Shopping Cart" });

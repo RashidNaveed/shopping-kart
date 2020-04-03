@@ -20,6 +20,12 @@ export default function Header() {
           </LinkContainer>
         </Nav>
         <Nav className="ml-auto">
+          <LinkContainer to="/signup">
+            <Nav.Link>Register</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/login">
+            <Nav.Link>Login</Nav.Link>
+          </LinkContainer>
           <LinkContainer to="/admin">
             <Nav.Link>Admin</Nav.Link>
           </LinkContainer>

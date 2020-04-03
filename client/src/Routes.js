@@ -9,6 +9,8 @@ import ProductList from "./components/productList/ProductList";
 import ProductDiscription from "./components/productList/ProductDiscription";
 import ShowCart from "./components/cart/ShowCart";
 import Checkout from "./components/checkout/Checkout";
+import Signup from "./components/auth/Signup";
+import Login from "./components/auth/Login";
 
 class Routes extends Component {
   render() {
@@ -27,6 +29,8 @@ class Routes extends Component {
           />
           <Route path="/cart" component={ShowCart} />
           <Route path="/checkout" component={Checkout} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/login" component={Login} />
         </Switch>
       </Router>
     );
