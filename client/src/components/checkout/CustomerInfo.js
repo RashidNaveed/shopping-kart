@@ -1,19 +1,30 @@
 import React, { Component } from "react";
 import {
+  Collapse,
+  Input,
+  Label,
   Row,
   Col,
-  ListGroup,
+  ListGroupItem,
   Button,
-  Collapse,
   Badge,
   FormGroup
-} from "react-bootstrap";
-import { Label, Input } from "reactstrap";
+} from "reactstrap";
 
 export default class CustomerInfo extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalEdit: false
+    };
+  }
+  toggle = () => {
+    this.setState({ modalEdit: !this.state.modalEdit });
+  };
   render() {
-    const firstName = this.props.firstName;
+    // const firstName = this.props.firstName;
     const {
+      firstName,
       lastName,
       country,
       city,
@@ -22,19 +33,18 @@ export default class CustomerInfo extends Component {
       phoneNumber,
       address1,
       address2,
-      shippingMethod,
-      formIsValid
+      shippingMethod
     } = this.props;
     return (
       <div style={{ borderBottom: "1px solid grey" }}>
-        <ListGroup.Item>
-          <h3 style={{ cursor: "pointer" }}>
+        <ListGroupItem>
+          <h3 style={{ cursor: "pointer" }} onClick={this.toggle}>
             <Badge color="secondary" pill size="sm">
               1
             </Badge>{" "}
             Customer Info {}
           </h3>
-          <Collapse>
+          <Collapse isOpen={this.state.modalEdit}>
             <Row>
               <Col md={6} style={{ paddingTop: "10px" }}>
                 <Label for="First name">First name</Label>
@@ -45,7 +55,7 @@ export default class CustomerInfo extends Component {
                 />
               </Col>
               <Col md={6} style={{ paddingTop: "10px" }}>
-                <Label for="exampleEmail">last Name</Label>
+                <Label for="exampleEmail">Last Name</Label>
                 <Input
                   type="text"
                   onChange={this.props.onChangeLastName}
@@ -53,14 +63,15 @@ export default class CustomerInfo extends Component {
                 />
               </Col>
               <Col md={12} style={{ paddingTop: "10px" }}>
-                <Label for="exampleSelect">Country</Label>
+                <Label>Country</Label>
                 <Input
                   type="select"
-                  name="select"
                   onChange={this.props.onChangeCountry}
                   value={country}
                 >
-                  <option value="Pakistan">Pakistan</option>
+                  <option id="Pakistan">Pakistan</option>
+                  <option id="China">China</option>
+                  <option id="India">India</option>
                 </Input>
               </Col>
               <Col md={6} style={{ paddingTop: "10px" }}>
@@ -139,11 +150,28 @@ export default class CustomerInfo extends Component {
                 </FormGroup>
               </Col>
               <div className="d-flex align-items-center">
-                <Button>continue</Button>
+                <Button
+                  disabled={
+                    !firstName ||
+                    !lastName ||
+                    !country ||
+                    !city ||
+                    !province ||
+                    !postalCode ||
+                    !phoneNumber ||
+                    !address1
+                  }
+                  onClick={() => {
+                    this.toggle();
+                    this.props.toggle();
+                  }}
+                >
+                  continue
+                </Button>
               </div>
             </Row>
           </Collapse>
-        </ListGroup.Item>
+        </ListGroupItem>
       </div>
     );
   }

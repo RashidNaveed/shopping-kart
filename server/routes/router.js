@@ -2,9 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 
-const order = require("../models/Order.model");
-
 const productController = require("../controllers/Product.controller");
+
+const orderController = require("../controllers/Order.controller");
 
 // adding products
 router.post("/products/add", productController.addProduct);
@@ -24,39 +24,9 @@ router.put("/products/edit/:id", productController.updateProduct);
 //deleting product
 router.delete("/products/delete/:id", productController.deleteProduct);
 //Posting new order
-router.post("/products/order", (req, res) => {
-  const {
-    refrenceId,
-    customerInfo,
-    customerOrder,
-    totalDelivery,
-    totalAmount
-  } = req.body;
-  const newOrder = new order({
-    refrenceId,
-    customerInfo,
-    customerOrder,
-    totalDelivery,
-    totalAmount
-  });
-  newOrder
-    .save()
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message || "Something went wrong while making order"
-      });
-    });
-  console.log(req);
-});
+router.post("/products/order", orderController.addOrder);
 //get order data
-router.get("/order", (req, res) => {
-  order.find((err, result) => {
-    err ? res.status(500).send(err) : res.json(result);
-  });
-});
+router.get("/order");
 
 router.get("/", (req, res) => {
   res.json({ message: "Welcome to Shopping Cart" });

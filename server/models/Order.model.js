@@ -2,9 +2,8 @@ const mongoose = require("mongoose");
 
 const orderSchema = mongoose.Schema(
   {
-    referenceId: String,
     customerInfo: {
-      email: String,
+      // email: String,
       firstName: String,
       lastName: String,
       country: String,
@@ -15,14 +14,16 @@ const orderSchema = mongoose.Schema(
       address1: String,
       address2: String
     },
-    customerOrder: {
-      itemId: String,
-      itemTitle: String,
-      selectedSize: String,
-      selectedColor: String,
-      price: Number,
-      quantity: Number
-    },
+    customerOrder: [
+      {
+        // itemId: String,
+        itemTitle: String,
+        selectedSize: String,
+        selectedColor: String,
+        price: Number,
+        quantity: Number
+      }
+    ],
     totalDelivery: Number,
     totalAmount: Number
   },

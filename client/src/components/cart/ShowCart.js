@@ -261,6 +261,7 @@ export default class ShowCart extends Component {
                       backgroundColor: "#6c757d",
                       borderColor: "#6c757d"
                     }}
+                    disabled={this.state.emptyMessage}
                   >
                     Check out
                   </Button>
