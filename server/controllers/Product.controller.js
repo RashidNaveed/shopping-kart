@@ -10,7 +10,7 @@ exports.addProduct = (req, res, next) => {
     rating,
     tags,
     color,
-    description
+    description,
   } = req.body;
   const newProduct = new product({
     title,
@@ -20,16 +20,16 @@ exports.addProduct = (req, res, next) => {
     rating,
     tags,
     color,
-    description
+    description,
   });
   newProduct
     .save()
-    .then(data => {
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: err.message || "Something went wrong while creating movie-card"
+        message: err.message || "Something went wrong while creating product",
       });
     });
   console.log(req);
@@ -48,22 +48,22 @@ exports.getSingleProduct = (req, res) => {
   console.log("Id is", id);
   product
     .findById(id)
-    .then(result => {
+    .then((result) => {
       if (!result) {
         return res.status(404).send({
-          message: "Product not found"
+          message: "Product not found",
         });
       }
       res.send(result);
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Product not found by id" + req.params.id
+          message: "Product not found by id" + req.params.id,
         });
       }
       return res.status(500).send({
-        message: "Product not found by id" + req.params.id
+        message: "Product not found by id" + req.params.id,
       });
     });
 };
@@ -78,7 +78,7 @@ exports.getTagProduct = (req, res) => {
     } else {
       if (result.length === 0) {
         res.status(200).json({
-          message: "Product not found by category " + req.params.tags
+          message: "Product not found by category " + req.params.tags,
         });
       } else return res.json(result);
     }
@@ -96,7 +96,7 @@ exports.updateProduct = (req, res) => {
         if (err) return handleError(err);
 
         product.set({ title, price, color, size, tags, images, description });
-        product.save(err => {
+        product.save((err) => {
           if (err) {
             console.log(err);
           }
@@ -105,22 +105,22 @@ exports.updateProduct = (req, res) => {
       console.log("id in params", id),
       console.log("Data in params", req.body)
     )
-    .then(result => {
+    .then((result) => {
       if (!result) {
         return res.status(404).send({
-          message: "Product not found"
+          message: "Product not found",
         });
       }
       res.send(result);
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Product not found by id" + id
+          message: "Product not found by id" + id,
         });
       }
       return res.status(500).send({
-        message: "Product not found by id" + id
+        message: "Product not found by id" + id,
       });
     });
 };
@@ -133,22 +133,22 @@ exports.deleteProduct = (req, res) => {
       if (err) return handleError(err);
       res.send("item: " + id + " deleted");
     })
-    .then(result => {
+    .then((result) => {
       if (!result) {
         return res.status(404).send({
-          message: "Product not found with id " + id
+          message: "Product not found with id " + id,
         });
       }
       res.send({ message: "Product deleted successfully!" });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.kind === "ObjectId" || err.name === "NotFound") {
         return res.status(404).send({
-          message: "Product not found with id " + id
+          message: "Product not found with id " + id,
         });
       }
       return res.status(500).send({
-        message: "Could not delete product with id " + req.params.id
+        message: "Could not delete product with id " + req.params.id,
       });
     });
   console.log("recived id is", id);

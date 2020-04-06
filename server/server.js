@@ -32,7 +32,7 @@ mongoose
   .then(() => {
     console.log("connected to database");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log("can't connect to database", err);
     process.exit;
   });
@@ -40,11 +40,14 @@ mongoose.set("useFindAndModify", false);
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", router);
 app.use((error, req, res, next) => {
-  console.log(error);
+  console.log("thrown error", error);
   const status = error.statusCode || 500;
   const message = error.message;
   const data = error.data;
-  res.status(status).json({ message: message, data: data });
+  console.log("thrown status code", status);
+  console.log("thrown message", message);
+  console.log("thrown data", data);
+  return res.status(status).json({ message: message, data: data });
 });
 app.use((req, res, next) => {
   res.status(404).sendFile(path.join(__dirname, "public", "pageNotFound.html"));

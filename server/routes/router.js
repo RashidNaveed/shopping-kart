@@ -42,7 +42,7 @@ router.put(
       .isEmail()
       .withMessage("Please enter a valid email")
       .custom((value, { req }) => {
-        return User.findOne({ email: value }).then(user => {
+        return User.findOne({ email: value }).then((user) => {
           if (user) {
             return Promise.reject("E-Mail address already exisits");
           }
@@ -51,17 +51,24 @@ router.put(
       .normalizeEmail(),
     body("password")
       .trim()
-      .isLength({ min: 6 }),
-    body("name")
+      .isLength({ min: 6 })
+      .withMessage("Password must be of 6 length"),
+    body("firstname")
       .trim()
       .not()
       .isEmpty()
+      .withMessage("Please enter your firstname"),
+    body("lastname")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Please enter your lastname"),
   ],
   authController.signup
 );
 
 //Login user
-router.post("/login", authController.login);
+router.post("/login",[], authController.login);
 
 router.get("/", (req, res) => {
   res.json({ message: "Welcome to Shopping Cart" });
